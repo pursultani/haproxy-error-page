@@ -100,6 +100,6 @@ core.register_action("error-page", { "http-res" }, function(txn)
     txn:Debug("lua.error-page: rewrite error page: " .. error_code)
     txn.res:set("")
     txn.res:send(error_page)
-    txn.done()
+    txn:done()
   end
 end)
