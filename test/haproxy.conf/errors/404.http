@@ -1,0 +1,14 @@
+HTTP/1.0 404 Not Found
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+<!doctype html>
+<html>
+<head>
+  <title>Not Found</title>
+</head>
+<body>
+  <h1>Oops! Not found</h1>
+</body>
+</html>

@@ -1,0 +1,21 @@
+version: '3.2'
+
+services:
+  web:
+    image: nginx:alpine
+    volumes:
+      - ${PWD}/nginx.conf:/etc/nginx/conf.d:ro
+      - ${PWD}/nginx.html:/usr/share/nginx/html:ro
+  proxy:
+    image: haproxy:alpine
+    command: |
+      sh -c "
+        syslogd \
+        && haproxy -dVD -p /run/haproxy.pid -f /usr/local/etc/haproxy/haproxy.cfg \
+        && tail -f /var/log/messages"
+    ports:
+      - 8080:80
+    volumes:
+      - ${PWD}/haproxy.conf:/usr/local/etc/haproxy
+    links:
+      - web:web

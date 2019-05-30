@@ -10,7 +10,7 @@ A Lua script for handling HTTP error pages in HAProxy
 == Motive
 
 HAProxy does not rewrite error pages returned by backends. The `errorfile`
-configuration is used for *errors that are detected by HAProxy*. Of course
+configuration is used for *errors that are detected by HAProxy*. Of course,
 this is well in line with the intended application of HAProxy as a _load
 balancer_.
 
@@ -52,7 +52,7 @@ frontend
 
 ----
 
-During the initialization, the script, reads `haproxy.cfg`, locates `errorfile`
+During the initialization, the script reads `haproxy.cfg`, locates `errorfile`
 entries, reads the content of the specified files, and builds a mapping between
 status codes and error files content.
 
@@ -66,6 +66,16 @@ page content, given that it could find the status code in the mapping.
   - Make sure that the error page file size does not exceed the configured
     buffer size and does not have reference to local content. See HAProxy
     documentation on `errorfile`.
+
+
+== Testing
+
+  - Test fixtures are located in `test/` directory.
+  - Copy `error-page.lua` to `test/haproxy.conf/scripts`.
+  - Compose services, i.e. `docker-compose -p test -d`.
+  - Check HAProxy logs, `docker-compose -p test logs -f proxy`.
+  - Start testing. `curl -v localhost:8080` must be `200`, every other path
+    must return `404` with content of `test/haproxy.conf/errors/404.http`.
 
 
 == Credits
