@@ -7,7 +7,7 @@ services:
       - ${PWD}/nginx.conf:/etc/nginx/conf.d:ro
       - ${PWD}/nginx.html:/usr/share/nginx/html:ro
   proxy:
-    image: haproxy:alpine
+    image: haproxy:1.8-alpine
     command: |
       sh -c "
         syslogd \
