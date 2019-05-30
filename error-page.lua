@@ -20,6 +20,7 @@ function find_config_file_path()
       found = true
     elseif found then
       file_path = s
+      break
     end
   end
   if file_path == nil then
