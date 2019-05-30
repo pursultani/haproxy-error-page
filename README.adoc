@@ -1,0 +1,74 @@
+= HAProxy Error Page
+Hossein Pursultani<hossein@freshbits.io>
+v1.0 - 2018
+
+:ref01: http://www.techietown.info/2017/02/haproxy-lua-example/
+
+A Lua script for handling HTTP error pages in HAProxy
+
+
+== Motive
+
+HAProxy does not rewrite error pages returned by backends. The `errorfile`
+configuration is used for *errors that are detected by HAProxy*. Of course
+this is well in line with the intended application of HAProxy as a _load
+balancer_.
+
+However, in some cases, when HAProxy is serving more than one web application,
+you may want to unify the error pages, including HTTP `404`, without creating
+redundant content and configuration, or adding another layer to the proxy.
+
+
+== Usage
+
+Add `error-page.lua` to your HAProxy instance and load it in the `global`
+section of `haproxy.cfg`. Then specify your error pages using `errorfile`
+keyword.
+
+Note that `404` status code is ignored by HAProxy (you can see it as a
+warning during initialization). However, the script still takes note of
+it.
+
+[source]
+----
+
+global
+
+  lua-load /path/to/error-page.lua
+  errorfile 404 /path/to/404.http
+  errorfile 500 /path/to/5xx.http
+
+----
+
+Then you can use `lua.error-page` as an action for `http-response` keyword:
+
+[source]
+----
+
+frontend
+
+  acl error status ge 400
+  http-response lua.error-page if error
+
+----
+
+During the initialization, the script, reads `haproxy.cfg`, locates `errorfile`
+entries, reads the content of the specified files, and builds a mapping between
+status codes and error files content.
+
+Once its action is triggered, it replaces the response from backend with error
+page content, given that it could find the status code in the mapping.
+
+
+== Notes
+
+  - Make sure that your HAProxy instance supports Lua scripting.
+  - Make sure that the error page file size does not exceed the configured
+    buffer size and does not have reference to local content. See HAProxy
+    documentation on `errorfile`.
+
+
+== Credits
+
+  - `find_config_file_path` function is adapted from a code snippet in
+    {ref01}[this blog post].
