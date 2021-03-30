@@ -1,3 +1,5 @@
+**This repository is deprecated. HAProxy 2.2 offers https://www.haproxy.com/blog/announcing-haproxy-2-2/#dynamic-error-handling[Dynamic Error Handling] (finally!)** 
+
 = HAProxy Error Page
 Hossein Pursultani<hossein@freshbits.io>
 v1.0 - 2018
